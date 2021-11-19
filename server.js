@@ -26,15 +26,21 @@ app.get("/api/hello", function (req, res) {
 app.get("/api/:date?", (req, res) => {
   let date = new Date(req.params.date);
   let timestamp = parseInt(req.params.date);
-  //console.log(timestamp);
-  if (req.params.date.includes("-")) {
+  console.log(date);
+  if (!req.params.date) {
+    let unix = Date.now();
+    let utc = new Date().toUTCString();
+    res.json({ unix: unix, utc: utc });
+  } else if (date.toString().includes(":")) {
     let unixDate = Date.parse(req.params.date);
     let utcDate = date.toUTCString();
     res.json({ unix: unixDate, utc: utcDate });
-  } else if (!isNaN(Date.parse(timestamp)) == false) {
+  } else if (timestamp) {
     let unix_date = timestamp;
     let utc_date = new Date(timestamp).toUTCString().toString();
     res.json({ unix: unix_date, utc: utc_date });
+  } else if (date == "Invalid Date") {
+    console.log("Invalid date condition met");
   }
 });
 
